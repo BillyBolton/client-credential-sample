@@ -1,0 +1,8 @@
+include 'common'
+include 'dtos'
+include 'adfs'
+include 'api'
+include 'azure-ad'
+include 'azure-b2c'
+include 'client-credentials'
+include 'qdsl'

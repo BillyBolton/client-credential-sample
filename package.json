@@ -1,0 +1,24 @@
+{
+  "name": "java-spring-webapp-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexgagnon/java-spring-webapp-template.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexgagnon/java-spring-webapp-template/issues"
+  },
+  "homepage": "https://github.com/alexgagnon/java-spring-webapp-template#readme",
+  "devDependencies": {
+    "lighthouse": "^7.0.0",
+    "newman": "^5.2.2"
+  }
+}

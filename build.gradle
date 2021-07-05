@@ -1,0 +1,20 @@
+plugins {
+  id 'eclipse' // easier use in eclipse
+  id 'idea' // easier use in intellij
+}
+
+Properties env = new Properties()
+File subPropertiesFile = new File("$projectDir/env.properties")
+subPropertiesFile.withInputStream {
+  env.load(it)
+}
+
+def checkEnvironment(env) {
+  if(gradle.gradleVersion != env.GRADLE_VERSION) {
+    throw new GradleException("Configured version of Gradle (${env.GRADLE_VERSION}) is different than the one used in the build (${gradle.gradleVersion})")
+  }
+
+  println "Gradle: ${gradle.gradleVersion}"
+}
+
+checkEnvironment(env)

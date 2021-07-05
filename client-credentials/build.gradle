@@ -1,0 +1,148 @@
+plugins {
+  id 'org.springframework.boot' version '2.5.0'
+  id "org.sonarqube" version "3.1.1"
+}
+
+apply plugin: 'war'
+apply plugin: 'io.spring.dependency-management'
+
+repositories {
+  mavenCentral()
+}
+
+// pulls out properties from a global properties file
+Properties env = new Properties()
+File subPropertiesFile = new File("$projectDir/env.properties")
+subPropertiesFile.withInputStream {
+  env.load(it)
+}
+
+// define environment and application settings
+def gradleVersion = env.GRADLE_VERSION
+def applicationName = env.NAME
+def buildNumber = env.BUILD_NUMBER
+group = env.GROUP
+version = env.VERSION
+def javaVersion = JavaVersion.toVersion(env.JAVA_VERSION)
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+compileJava.options.encoding = env.ENCODING
+
+def archiveName = "${applicationName}##${version}.${buildNumber}"
+
+def profiles = (project.hasProperty('profiles')
+  ? project.property('profiles')
+  : env.DEFAULT_LOCAL_SPRING_PROFILES
+).split(",")
+
+bootRun {
+  args = ["--spring.profiles.active=${profiles.join(",")}"]
+}
+
+bootJar {
+  archiveFileName = "${archiveName}.jar"
+}
+
+bootWar {
+  archiveFileName = "${archiveName}.war"
+}
+
+test {
+  useJUnitPlatform()
+
+  // need to be able to pass through the active profile supplied in gradle task
+  systemProperty 'spring.profiles.active', profiles.join(",")
+}
+
+configurations {
+  developmentOnly
+  runtimeClasspath {
+    extendsFrom developmentOnly
+  }
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+ext {
+  AAD_VERSION = "3.5.0"
+  CDTS_VERSION = "2.1.0"
+  JUNIT_VERSION = "5.3.1"
+  MAPSTRUCT_VERSION = '1.4.1.Final'
+  MAPSTRUCT_BINDING_VERSION = '0.2.0'
+  MOCKITO_VERSION = '2.18.3'
+  RESTASSURED_VERSION = '4.1.2'
+}
+
+compileJava {
+  options.compilerArgs += [
+    '-Amapstruct.defaultComponentModel=spring'
+  ]
+}
+
+dependencies {
+  // link local modules/libs
+  implementation project(':dtos')
+  implementation fileTree(include: ["*.jar"], dir: "libs")
+
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+  // annotations for getters/setters/ctors/equals/hashCode
+  annotationProcessor "org.projectlombok:lombok"
+
+  // easier/faster DTOs
+  annotationProcessor "org.mapstruct:mapstruct-processor:$MAPSTRUCT_VERSION"
+  implementation "org.mapstruct:mapstruct:$MAPSTRUCT_VERSION"
+  testAnnotationProcessor "org.mapstruct:mapstruct-processor:$MAPSTRUCT_VERSION"
+
+  // required for binding mapstruct and lombok together
+  annotationProcessor "org.projectlombok:lombok-mapstruct-binding:$MAPSTRUCT_BINDING_VERSION"
+
+  // better dev experience in bootRun
+  developmentOnly "org.springframework.boot:spring-boot-devtools"
+
+  // Thymeleaf HTML template engine
+  implementation "org.springframework.boot:spring-boot-starter-thymeleaf" // health checks
+  implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect"
+
+  // health checks
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
+
+  // allows for oauth2/openid connect features
+  // implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+  compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.5.2"
+
+  // standard MVC architecture
+  implementation "org.springframework.boot:spring-boot-starter-web"
+
+  // set to 'providedRuntime' to allow both jar/war deploys
+  providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
+
+  // easier mocks
+  testImplementation "org.mockito:mockito-junit-jupiter:$MOCKITO_VERSION"
+
+  // easier REST testing
+  testImplementation "io.rest-assured:rest-assured-all:$RESTASSURED_VERSION"
+  testImplementation "io.rest-assured:spring-mock-mvc:3.3.0"
+
+  // allows for SpringBootTest
+	testImplementation ("org.springframework.boot:spring-boot-starter-test")
+
+  // AAD
+  implementation "com.azure.spring:azure-spring-boot-starter-active-directory:$AAD_VERSION"
+
+}
+
+// make sure your environment is set up correctly!
+task checkEnvironment {
+  doFirst {
+    if(JavaVersion.current() != javaVersion) {
+      throw new GradleException("Configured version of Java (${javaVersion}) is different than the host version (${JavaVersion.current()})")
+    }
+
+    println "Java: ${javaVersion} (${env.JAVA_VERSION})"
+    println "Spring Boot profiles: ${profiles}"
+  }
+}
+
+compileJava.dependsOn checkEnvironment

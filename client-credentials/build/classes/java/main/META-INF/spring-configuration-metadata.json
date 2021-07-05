@@ -1,0 +1,11 @@
+{
+  "groups": [],
+  "properties": [
+    {
+      "name": "api.url",
+      "type": "java.lang.String",
+      "description": "The URL for the API"
+    }
+  ],
+  "hints": []
+}

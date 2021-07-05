@@ -1,0 +1,10 @@
+ azure:
+  activedirectory:
+    tenant-id: {tenant-id}
+    client-id: {client-id}
+    client-secret: {client-secret}
+    authorization-clients:
+     web-api:
+       scopes:
+         - api://example-api/.default
+       authorization-grant-type: client-credentials

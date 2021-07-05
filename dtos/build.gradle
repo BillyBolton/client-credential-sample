@@ -1,0 +1,37 @@
+plugins {
+  id 'java-library'
+}
+
+repositories {
+	mavenCentral()
+}
+
+Properties env = new Properties()
+File subPropertiesFile = new File("$projectDir/env.properties")
+subPropertiesFile.withInputStream {
+  env.load(it)
+}
+
+// define environment and application settings
+def gradleVersion = env.GRADLE_VERSION
+def applicationName = env.NAME
+def buildNumber = env.BUILD_NUMBER
+group = env.GROUP
+version = env.VERSION
+def javaVersion = JavaVersion.toVersion(env.JAVA_VERSION)
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+compileJava.options.encoding = env.ENCODING
+
+def archiveName = env.ARCHIVE_NAME
+
+ext {
+  LOMBOK_VERSION = '1.18.+'
+}
+
+dependencies {
+	compileOnly "org.projectlombok:lombok:$LOMBOK_VERSION"
+	annotationProcessor "org.projectlombok:lombok:$LOMBOK_VERSION"
+	testCompileOnly "org.projectlombok:lombok:$LOMBOK_VERSION"
+	testAnnotationProcessor "org.projectlombok:lombok:$LOMBOK_VERSION"
+}

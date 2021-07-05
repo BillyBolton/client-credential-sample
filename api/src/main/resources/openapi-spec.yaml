@@ -1,0 +1,139 @@
+openapi: 3.0.3
+info:
+  title: Employees
+  version: "1.0"
+
+servers:
+  - url: https://{domain}:{port}/api/v1/
+    variables:
+      domain:
+        description: The domain for the API
+        default: 'example.org'
+        enum:
+          - localhost
+          - staging.example.org
+          - example.org
+      port:
+          description: The port for the API
+          default: '443'
+          enum:
+            - '8080'
+            - '8443'
+            - '443'
+
+paths:
+  /employees:
+    x-i18n-path:
+      fr: /employees
+
+    get:
+      operationId: 'getEmployees'
+      responses:
+        200:
+          $ref: '#/components/responses/Employee'
+
+    post:
+      operationId: 'createEmployee'
+      responses:
+        200:
+          $ref: '#/components/responses/Employee'
+
+
+  /employees/bulk:
+    x-i18n-path:
+      fr: /employees/vrac
+
+    description: Operations on  multiple employees at once
+    x-i18n-description:
+
+    post:
+      operationId: 'createEmployees'
+      responses:
+        200:
+          $ref: '#/components/responses/EmployeeList'
+
+    put:
+      operationId: 'updateEmployees'
+      responses:
+        200:
+          $ref: '#/components/responses/EmployeeList'
+
+    delete:
+      operationId: 'deleteEmployees'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: OK
+
+  /employees/{id}:
+    x-i18n-path:
+      fr: /employees/{id}
+
+    parameters:
+      - name: id
+        required: true
+        in: path
+        description: Employee ID
+        schema:
+          type: string
+
+    get:
+      operationId: 'getEmployeeById'
+      responses:
+        200:
+          $ref: '#/components/responses/Employee'
+
+    patch:
+      operationId: 'replaceEmployeeById'
+      responses:
+        200:
+          $ref: '#/components/responses/Employee'
+
+    put:
+      operationId: 'updateEmployeeById'
+      responses:
+        200:
+          $ref: '#/components/responses/Employee'
+
+    delete:
+      operationId: 'deleteEmployeeById'
+      responses:
+        200:
+          $ref: '#/components/responses/Employee'
+
+
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        name:
+          type: string
+
+  responses:
+    Employee:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Employee'
+
+    EmployeeList:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Employee'
+
+
+
+
+

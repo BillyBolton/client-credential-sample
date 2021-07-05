@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{splash-template}"
+  th:with="goctemplateclientbean=${@indexbean}"
+>
+  <head>
+    <title th:text="#{index.greeting}">Fallback title</title>
+  </head>
+  <body>
+    <h1 th:text="#{index.greeting}">Fallback title</h1>
+    <div layout:fragment="content">
+      <form method="POST" th:action="@{/employees}">
+        <div>
+          <label for="name" th:text="#{index.name.label}"></label>
+          <input id="name" type="text" />
+        </div>
+        <div>
+          <label for="role" th:text="#{index.role.label}"></label>
+          <input id="role" type="text" />
+        </div>
+        <button type="submit" th:text="#{submit}"></button>
+      </form>
+      <h2>Server-side generated</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="item, index : ${employees}">
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.role}"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Client-side generated</h2>
+      <table id="js-employees">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- This will be populated by JS -->
+        </tbody>
+      </table>
+      <script type="text/javascript" src="js/index.js"></script>
+    </div>
+  </body>
+</html>
