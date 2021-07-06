@@ -1,10 +1,10 @@
- azure:
+azure:
   activedirectory:
-    tenant-id: {tenant-id}
-    client-id: {client-id}
-    client-secret: {client-secret}
+    tenant-id: acfc92c8-4e72-4af9-bff8-60d632079340
+    client-id: f8f123d1-fd92-4037-b7b3-8ee9875aaaa2
+    client-secret: 3~9.d962e_m0s6ZLptmUsi-BekpNK9yd_M
     authorization-clients:
-     web-api:
-       scopes:
-         - api://example-api/.default
-       authorization-grant-type: client-credentials
+      web-api:
+        scopes:
+          - api://example-api/.default
+        authorization-grant-type: client-credentials

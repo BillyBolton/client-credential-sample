@@ -10,8 +10,8 @@ org/example/Application.java
  org.example.Application
 org/example/config/WebConfig.java
  org.example.config.WebConfig
+org/example/security/AADOAuth2ResourceServerSecurityConfig.java
+ org.example.security.AADOAuth2ResourceServerSecurityConfig
 org/example/pages/index/IndexController.java
  org.example.pages.index.IndexController
  org.example.pages.index.IndexController$FormBody
-org/example/security/AADOAuth2ResourceServerSecurityConfig.java
- org.example.security.AADOAuth2ResourceServerSecurityConfig

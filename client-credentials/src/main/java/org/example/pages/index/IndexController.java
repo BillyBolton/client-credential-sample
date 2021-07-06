@@ -21,34 +21,12 @@ public class IndexController {
   private IndexService indexService;
 
   @GetMapping("/")
-  // @PreAuthorize("hasRole('ROLE_group1')")
+  @PreAuthorize("hasRole('APPROLE_Task.Read')")
   public String index(Model model) {
     System.out.println("another test");
     model.addAttribute("employees", indexService.getEmployees());
     return "index";
   }
-
-  @GetMapping("/webapiB/clientCredential")
-  @ResponseBody
-  public String clientCredential() {
-    return "Response from webApiB: clientCredential";
-
-  }
-
-  @GetMapping("/webapiB")
-  @ResponseBody
-  @PreAuthorize("hasAuthority('SCOPE_WebApiB.ExampleScope')")
-  public String file() {
-    return "Response from webApiB.";
-  }
-
-  @GetMapping("/user")
-  @ResponseBody
-  @PreAuthorize("hasAuthority('SCOPE_User.Read')")
-  public String user() {
-    return "User read success.";
-  }
-
 
   @PostMapping("/employees")
   public String index(@RequestBody FormBody formBody) {
