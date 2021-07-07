@@ -1,10 +1,13 @@
 package org.example.pages.index;
 
+import org.example.entities.employees.EmployeeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 // import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.Data;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
+
+import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient;
 
 @Controller
 public class IndexController {
@@ -20,11 +28,21 @@ public class IndexController {
   @Autowired
   private IndexService indexService;
 
+  @Autowired
+  private WebClient webClient;
+
   @GetMapping("/")
-  @PreAuthorize("hasRole('APPROLE_Task.Read')")
-  public String index(Model model) {
-    System.out.println("another test");
-    model.addAttribute("employees", indexService.getEmployees());
+  // @PreAuthorize("hasRole('APPROLE_Task.Read')")
+  public String index(Model model,
+                      @RegisteredOAuth2AuthorizedClient("web-api") OAuth2AuthorizedClient client) {
+      String employees = webClient
+          .get()
+          .uri("https://localhost:9443/employees")
+          .attributes(oauth2AuthorizedClient(client))
+          .retrieve()
+          .bodyToMono(String.class)
+          .block();
+    model.addAttribute("employees", employees);
     return "index";
   }
 

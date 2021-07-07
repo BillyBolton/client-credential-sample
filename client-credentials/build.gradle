@@ -109,7 +109,7 @@ dependencies {
   implementation "org.springframework.boot:spring-boot-starter-actuator"
 
   // allows for oauth2/openid connect features
-  // implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+  implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
   compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.5.2"
 
   // standard MVC architecture
