@@ -32,16 +32,12 @@ public class IndexController {
   private WebClient webClient;
 
   @GetMapping("/")
-  // @PreAuthorize("hasRole('APPROLE_Task.Read')")
+  @PreAuthorize("hasAuthority('APPROLE_Task.Delete')")
   public String index(Model model,
-                      @RegisteredOAuth2AuthorizedClient("web-api") OAuth2AuthorizedClient client) {
-      String employees = webClient
-          .get()
-          .uri("https://localhost:9443/employees")
-          .attributes(oauth2AuthorizedClient(client))
-          .retrieve()
-          .bodyToMono(String.class)
-          .block();
+      @RegisteredOAuth2AuthorizedClient("web-api") OAuth2AuthorizedClient client) {
+    String employees =
+        webClient.get().uri("https://tdd-playwright-example-api.herokuapp.com/employees/2")
+            .attributes(oauth2AuthorizedClient(client)).retrieve().bodyToMono(String.class).block();
     model.addAttribute("employees", employees);
     return "index";
   }

@@ -7,6 +7,15 @@
 
 <body>
   <h1 name=greeting>Client-credentials</h1>
+  <table>
+    <thead>
+    </thead>
+    <tbody>
+      <tr th:each="item, index : ${employees}">
+        <td th:text="${item}"></td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 
 </html>
