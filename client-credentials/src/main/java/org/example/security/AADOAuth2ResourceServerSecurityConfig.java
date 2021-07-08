@@ -17,8 +17,6 @@ public class AADOAuth2ResourceServerSecurityConfig
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-        http.authorizeRequests()
-            .anyRequest()
-            .permitAll();
+        http.authorizeRequests().anyRequest().permitAll();
     }
 }
